@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Author, Book, Library, Librarian
+from .models import UserProfile, Author, Book, Library, Librarian  # import all models you want to register
 
 # Register your models here
 admin.site.register(Author)
