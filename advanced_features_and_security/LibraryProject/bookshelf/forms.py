@@ -24,5 +24,5 @@ class CustomUserForm(forms.ModelForm):
 # ----------------------------
 class ExampleForm(forms.ModelForm):
     class Meta:
-        model = Example
+        model = Example 
         fields = ['example_field']
