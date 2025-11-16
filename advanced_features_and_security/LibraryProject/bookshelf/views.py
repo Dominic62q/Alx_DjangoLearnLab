@@ -61,3 +61,15 @@ def search_books(request):
     query = request.GET.get('q', '')
     books = Book.objects.filter(title__icontains=query)  # ORM prevents SQL injection
     return render(request, 'bookshelf/book_list.html', {'books': books, 'query': query})
+
+def example_view(request):
+    if request.method == 'POST':
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            # Just a placeholder action to satisfy the assignment
+            example_value = form.cleaned_data['example_field']
+            print("ExampleForm submitted:", example_value)
+            return redirect('book_list')
+    else:
+        form = ExampleForm()
+    return render(request, 'bookshelf/form_example.html', {'form': form})
