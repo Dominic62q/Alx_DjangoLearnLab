@@ -1,8 +1,6 @@
-# LibraryProject/bookshelf/admin.py
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from django import forms
 from .models import CustomUser, Book
 
 # ----------------------------
@@ -21,7 +19,6 @@ class CustomUserChangeForm(UserChangeForm):
 # ----------------------------
 # Custom User Admin
 # ----------------------------
-@admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm       # Edit form
     add_form = CustomUserCreationForm # Creation form using custom manager
@@ -41,7 +38,12 @@ class CustomUserAdmin(UserAdmin):
 # ----------------------------
 # Book Admin
 # ----------------------------
-@admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'publication_year')
     search_fields = ('title', 'author')
+
+# ----------------------------
+# Register models with admin.site.register
+# ----------------------------
+admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(Book, BookAdmin)
