@@ -1,10 +1,22 @@
+# LibraryProject/bookshelf/admin.py
 from django.contrib import admin
-from .models import Book
+from django.contrib.auth.admin import UserAdmin
+from .models import CustomUser, Book
 
-# Register your models here.
+# ----------------------------
+# Custom User Admin
+# ----------------------------
+@admin.register(CustomUser)
+class CustomUserAdmin(UserAdmin):
+    fieldsets = UserAdmin.fieldsets + (
+        ('Additional Info', {'fields': ('date_of_birth', 'profile_photo')}),
+    )
+    list_display = ('username', 'email', 'first_name', 'last_name', 'date_of_birth', 'is_staff')
+
+# ----------------------------
+# Book Admin
+# ----------------------------
+@admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'publication_year')
     search_fields = ('title', 'author')
-    list_filter = ('publication_year',)
-
-admin.site.register(Book, BookAdmin)
