@@ -2,7 +2,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required
 from .models import Book
-from .forms import BookForm, CustomUserForm, ExampleForm
+from .forms import BookForm, CustomUserForm
+from .forms import Example
+from .forms import ExampleForm
 
 # ----------------------------
 # List all books (requires can_view)
