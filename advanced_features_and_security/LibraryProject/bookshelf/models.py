@@ -86,3 +86,9 @@ def create_user_groups(sender, **kwargs):
             except Permission.DoesNotExist:
                 print(f"Permission {perm_codename} does not exist yet.")
         group.save()
+
+class Example(models.Model):
+    example_field = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.example_field

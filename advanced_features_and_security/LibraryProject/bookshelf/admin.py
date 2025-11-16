@@ -42,8 +42,11 @@ class BookAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'publication_year')
     search_fields = ('title', 'author')
 
+class ExampleAdmin(admin.ModelAdmin):
+    list_display = ('example_field')
 # ----------------------------
 # Register models with admin.site.register
 # ----------------------------
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Book, BookAdmin)
+admin.site.register(Example, ExampleAdmin)

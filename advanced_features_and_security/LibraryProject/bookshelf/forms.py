@@ -1,6 +1,7 @@
 # LibraryProject/bookshelf/forms.py
 from django import forms
 from .models import Book, CustomUser
+from .models import Example
 
 # ----------------------------
 # Book Form
@@ -21,5 +22,7 @@ class CustomUserForm(forms.ModelForm):
 # ----------------------------
 # Example Form (for assignment checker)
 # ----------------------------
-class ExampleForm(forms.Form):
-    example_field = forms.CharField(max_length=100)
+class ExampleForm(forms.ModelForm):
+    class Meta:
+        model = Example
+        fields = ['example_field']
