@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views import BookListViewSet
 
 router = DefaultRouter()
-router.register(r'books_all', BookListViewSet, basename='book_all')
+router.register(r'books_all', BookViewSet, basename='book_all')
 
 
 urlpatterns = [
