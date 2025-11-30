@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     # Read-only
-    path("books/", views.BookListView.as_view(), name="book-list"),
+    path('books/', BookListView.as_view(), name='book-list'),
     path("books/<int:pk>/", views.BookDetailView.as_view(), name="book-detail"),
 
     # Write (authenticated users only)
