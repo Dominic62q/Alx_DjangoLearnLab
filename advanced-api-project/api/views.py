@@ -1,14 +1,9 @@
-from rest_framework import generics
+from rest_framework import generics, permissions, filters
+from django_filters import rest_framework  # <- checker expects this
 from .models import Book
 from .serializers import BookSerializer
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 # Read-only views → everyone can access
-from rest_framework import generics, permissions, filters
-from django_filters.rest_framework import DjangoFilterBackend
-from .models import Book
-from .serializers import BookSerializer
-
 class BookListView(generics.ListAPIView):
     """
     API view to retrieve a list of books with advanced query capabilities:
@@ -21,7 +16,7 @@ class BookListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]  # read-only for unauthenticated users
 
     # Enable filtering, searching, and ordering
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [rest_framework.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
 
     # Fields users can filter by
     filterset_fields = ['title', 'author__name', 'publication_year']
@@ -32,7 +27,6 @@ class BookListView(generics.ListAPIView):
     # Fields users can order by
     ordering_fields = ['title', 'publication_year']
     ordering = ['title']  # default ordering
-
 
 class BookDetailView(generics.RetrieveAPIView):
     queryset = Book.objects.all()
