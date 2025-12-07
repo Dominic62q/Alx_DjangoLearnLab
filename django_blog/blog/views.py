@@ -61,19 +61,19 @@ class PostListView(ListView):
     template_name = "blog/post_list.html"
     context_object_name = "posts"
     paginate_by = 10  # optional
-class TagPostListView(ListView):
+class PostByTagListView(ListView):
     model = Post
     template_name = "blog/post_list.html"
     context_object_name = "posts"
 
     def get_queryset(self):
-        tag_name = self.kwargs["tag_name"]
-        return Post.objects.filter(tags__name__iexact=tag_name).distinct()
+        return Post.objects.filter(tags__slug=self.kwargs["tag_slug"]).distinct()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["tag_name"] = self.kwargs["tag_name"]
+        context["tag_slug"] = self.kwargs["tag_slug"]
         return context
+
 class PostSearchListView(ListView):
     model = Post
     template_name = "blog/search_results.html"
