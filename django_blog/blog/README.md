@@ -37,3 +37,20 @@ Logout
 Update profile information
 
 Attempt invalid inputs to verify validation
+
+## Blog Post Management (CRUD)
+
+This project implements full CRUD operations for blog posts:
+
+- **ListView** (`PostListView`): `/posts/` – displays all posts.
+- **DetailView** (`PostDetailView`): `/posts/<int:pk>/` – shows a single post.
+- **CreateView** (`PostCreateView`): `/posts/new/` – authenticated users can create posts.
+- **UpdateView** (`PostUpdateView`): `/posts/<int:pk>/edit/` – only the author can edit.
+- **DeleteView** (`PostDeleteView`): `/posts/<int:pk>/delete/` – only the author can delete.
+
+Permissions:
+- List + detail are public.
+- Create requires authentication (`LoginRequiredMixin`).
+- Edit/Delete require the user to be the author (`UserPassesTestMixin`).
+
+Posts are linked to the built-in Django `User` model via a ForeignKey (`author`).
