@@ -54,3 +54,59 @@ Permissions:
 - Edit/Delete require the user to be the author (`UserPassesTestMixin`).
 
 Posts are linked to the built-in Django `User` model via a ForeignKey (`author`).
+
+Comment System Overview
+
+Each Post can have many Comment objects (one-to-many).
+
+Each Comment belongs to:
+
+a Post (ForeignKey)
+
+a User as author (ForeignKey)
+
+The system tracks created_at and updated_at for auditing.
+
+How to Add a Comment
+
+Go to a post detail page: /posts/<post_id>/.
+
+If logged in, a comment form appears at the bottom of the page.
+
+Type your message and submit.
+
+You are redirected back to the post with your new comment visible.
+
+How to Edit a Comment
+
+Only the author of a comment can edit it.
+
+On the post detail page, if you are the author, you see an “Edit” link.
+
+Clicking it opens /comments/<comment_id>/edit/.
+
+After saving, you are sent back to the post detail page.
+
+How to Delete a Comment
+
+Only the author of a comment can delete it.
+
+On the post detail page, if you are the author, you see a “Delete” link.
+
+This opens a confirmation page at /comments/<comment_id>/delete/.
+
+Confirming deletion removes the comment and redirects you back to the post.
+
+Permissions & Visibility
+
+All users (including anonymous visitors) can view comments under a post.
+
+Only authenticated users can create comments.
+
+Only the comment’s author can edit or delete that comment.
+
+Permissions are enforced both:
+
+in the template (show/hide buttons)
+
+in the views (using @login_required and UserPassesTestMixin).

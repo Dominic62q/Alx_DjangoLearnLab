@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
@@ -14,8 +14,9 @@ from django.views.generic import (
 from django.urls import reverse_lazy
 from .models import Post
 from .forms import PostForm
-
-from .forms import CustomUserRegistrationForm, ProfileUpdateForm
+from .models import Comment
+from .forms import CustomUserRegistrationForm, ProfileUpdateForm, CommentForm
+from django.views.generic import UpdateView, DeleteView
 
 class UserLoginView(LoginView):
     template_name = "blog/login.html"
@@ -99,3 +100,50 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
+
+@login_required
+def comment_create(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            return redirect(post.get_absolute_url())
+    else:
+        form = CommentForm()
+
+    # Optional: render a separate page just for adding comments
+    return render(request, 'blog/comment_form.html', {
+        'form': form,
+        'post': post,
+    })
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_edit.html'
+
+    def test_func(self):
+        comment = self.get_object()
+        # Only author can edit
+        return comment.author == self.request.user
+
+    def get_success_url(self):
+        # After editing, go back to the post detail page
+        return self.object.post.get_absolute_url()
+    
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = 'blog/comment_confirm_delete.html'
+
+    def test_func(self):
+        comment = self.get_object()
+        # Only author can delete
+        return comment.author == self.request.user
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
