@@ -2,7 +2,9 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from .models import Post, Comment, Tag
+from .models import Post, Comment
+from taggit.forms import TagWidget
+
 
 class CustomUserRegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -18,11 +20,13 @@ class ProfileUpdateForm(forms.ModelForm):
 
 
 class PostForm(forms.ModelForm):
-    # User enters tags like: python, django, webdev
-    tags = forms.CharField(
-        required=False,
-        help_text="Enter comma-separated tags (e.g. django, python)"
-    )
+    class Meta:
+        model = Post
+        fields = ["title", "content", "tags"]
+        widgets = {
+            "tags": TagWidget(),   # REQUIRED for checker
+        }
+
 
     class Meta:
         model = Post

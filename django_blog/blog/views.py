@@ -14,7 +14,7 @@ from django.views.generic import (
 from django.urls import reverse_lazy
 from .models import Post
 from .forms import PostForm
-from .models import Comment, Tag
+from .models import Comment
 from .forms import CustomUserRegistrationForm, ProfileUpdateForm, CommentForm
 from django.views.generic import UpdateView, DeleteView
 from django.db.models import Q
