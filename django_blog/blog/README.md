@@ -110,3 +110,54 @@ Permissions are enforced both:
 in the template (show/hide buttons)
 
 in the views (using @login_required and UserPassesTestMixin).
+
+
+Tagging System
+
+A new Tag model was introduced with a single name field.
+Each blog post now has a many-to-many relationship with tags, allowing posts to have multiple tags and enabling each tag to be linked to many posts.
+
+A tags field was added to the post creation form where users can enter comma-separated tags (for example: django, python, webdev).
+When the form is submitted, the system splits this input, removes extra spaces, creates new tags if they do not already exist, and assigns the tags to the post.
+During post editing, the existing tags are automatically displayed so users can update them easily.
+
+Tags are displayed under each post, both in the post list and detail views. Each tag is clickable and takes the user to a page showing all posts associated with that tag, improving navigation and content discovery.
+
+Search Functionality
+
+A simple search bar was added to the site header.
+Users can search for posts by typing a keyword, which will match against:
+
+Post titles
+
+Post content
+
+Tag names
+
+The search feature uses Django’s filtering system to find relevant posts and displays them on a dedicated search results page. If no posts match the search query, a message is shown to the user.
+
+URL Additions
+
+Two new URL patterns support these features:
+
+/tags/<tag_name>/ — shows all posts linked to a specific tag.
+
+/search/ — processes search queries and displays matching posts.
+
+These routes provide intuitive ways for users to browse content.
+
+Testing
+
+The system was tested by:
+
+Creating posts with new tags
+
+Editing posts and updating their tags
+
+Viewing posts filtered by tag
+
+Searching using keywords and tag names
+
+Checking behavior for empty and duplicate inputs
+
+All features work smoothly and integrate well with the existing blog structure.

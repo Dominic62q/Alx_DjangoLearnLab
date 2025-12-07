@@ -14,9 +14,10 @@ from django.views.generic import (
 from django.urls import reverse_lazy
 from .models import Post
 from .forms import PostForm
-from .models import Comment
+from .models import Comment, Tag
 from .forms import CustomUserRegistrationForm, ProfileUpdateForm, CommentForm
 from django.views.generic import UpdateView, DeleteView
+from django.db.models import Q
 
 class UserLoginView(LoginView):
     template_name = "blog/login.html"
@@ -60,7 +61,39 @@ class PostListView(ListView):
     template_name = "blog/post_list.html"
     context_object_name = "posts"
     paginate_by = 10  # optional
+class TagPostListView(ListView):
+    model = Post
+    template_name = "blog/post_list.html"
+    context_object_name = "posts"
 
+    def get_queryset(self):
+        tag_name = self.kwargs["tag_name"]
+        return Post.objects.filter(tags__name__iexact=tag_name).distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tag_name"] = self.kwargs["tag_name"]
+        return context
+class PostSearchListView(ListView):
+    model = Post
+    template_name = "blog/search_results.html"
+    context_object_name = "posts"
+
+    def get_queryset(self):
+        query = self.request.GET.get("q", "")
+        if not query:
+            return Post.objects.none()
+
+        return Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["query"] = self.request.GET.get("q", "")
+        return context
 
 class PostDetailView(DetailView):
     model = Post
@@ -75,7 +108,22 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        self.save_tags(form)
+        return response
+
+    def save_tags(self, form):
+        tags_raw = form.cleaned_data.get("tags", "")
+        tag_names = [name.strip() for name in tags_raw.split(",") if name.strip()]
+
+        tag_objects = []
+        for name in tag_names:
+            tag, created = Tag.objects.get_or_create(name=name)
+            tag_objects.append(tag)
+
+        # Attach tags to this post
+        self.object.tags.set(tag_objects)
+
 
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -84,8 +132,21 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = "blog/post_form.html"
 
     def form_valid(self, form):
-        # author stays the same
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        self.save_tags(form)
+        return response
+
+    def save_tags(self, form):
+        tags_raw = form.cleaned_data.get("tags", "")
+        tag_names = [name.strip() for name in tags_raw.split(",") if name.strip()]
+
+        tag_objects = []
+        for name in tag_names:
+            tag, created = Tag.objects.get_or_create(name=name)
+            tag_objects.append(tag)
+
+        # Replace old tags with the new ones
+        self.object.tags.set(tag_objects)
 
     def test_func(self):
         post = self.get_object()
