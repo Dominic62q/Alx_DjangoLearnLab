@@ -43,11 +43,11 @@ class FeedView(generics.GenericAPIView):
         serializer = self.get_serializer(posts, many=True)
         return Response(serializer.data)
     
-class LikePostView(APIView):
-    permission_classes = [IsAuthenticated]
+class LikePostView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
 
         like, created = Like.objects.get_or_create(
             user=request.user,
@@ -60,7 +60,6 @@ class LikePostView(APIView):
                 status=400
             )
 
-        # 🔔 Create notification
         Notification.objects.create(
             recipient=post.author,
             actor=request.user,
@@ -71,11 +70,11 @@ class LikePostView(APIView):
         return Response({"detail": "Post liked"})
 
 
-class UnlikePostView(APIView):
-    permission_classes = [IsAuthenticated]
+class UnlikePostView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
 
         Like.objects.filter(
             user=request.user,
