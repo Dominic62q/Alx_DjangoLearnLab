@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework import generics, status, permissions
 
 # Create your views here.
 from rest_framework.views import APIView
@@ -52,28 +53,26 @@ class ProfileView(APIView):
         return Response(serializer.data)
 class FollowUserView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    queryset = CustomUser.objects.all()
+    queryset = User.objects.all()
 
     def post(self, request, user_id):
-        user_to_follow = get_object_or_404(CustomUser, id=user_id)
-
-        if user_to_follow == request.user:
-            return Response(
-                {"error": "You cannot follow yourself"},
-                status=400
-            )
-
+        user_to_follow = self.get_object()
         request.user.following.add(user_to_follow)
-        return Response({"message": "User followed successfully"})
+        return Response(
+            {"message": "User followed successfully"},
+            status=status.HTTP_200_OK
+        )
 
 
 class UnfollowUserView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    queryset = CustomUser.objects.all()
+    queryset = User.objects.all()
 
     def post(self, request, user_id):
-        user_to_unfollow = get_object_or_404(CustomUser, id=user_id)
-
+        user_to_unfollow = self.get_object()
         request.user.following.remove(user_to_unfollow)
-        return Response({"message": "User unfollowed successfully"})
+        return Response(
+            {"message": "User unfollowed successfully"},
+            status=status.HTTP_200_OK
+        )
 
