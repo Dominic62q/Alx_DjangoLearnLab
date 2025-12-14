@@ -1,45 +1,47 @@
 SOCIAL MEDIA API
-PHASE 1 – AUTHENTICATION FOUNDATION
+PROJECT DOCUMENTATION
 
 INTRODUCTION
 
 The Social Media API is a backend application built using Django and Django REST Framework.
-The goal of this phase is to set up the project environment and implement user authentication features that will serve as the foundation for a full social media platform.
+The purpose of this project is to create a scalable API that supports user authentication and core social media features such as posting content and commenting on posts.
 
-This phase focuses on user registration, login, token-based authentication, and basic profile management.
+The project is developed in phases to ensure a strong and secure foundation.
 
 TECHNOLOGIES USED
 
-The following technologies were used in building this project:
+The following technologies were used:
 
 • Python
 • Django
 • Django REST Framework
-• Token Authentication
-• SQLite database (default)
+• Token-based Authentication
+• SQLite Database
 
-PROJECT SETUP
+PROJECT OVERVIEW
 
-A new Django project named “social_media_api” was created.
-An application called “accounts” was added to handle all user-related functionality.
+The Social Media API consists of two main functional phases:
 
-The Django REST Framework and token authentication system were configured to support API development.
+• Phase 1: User Authentication and Profile Management
+• Phase 2: Posts and Comments Functionality
 
-USER AUTHENTICATION SYSTEM
+Each phase builds on the previous one to expand the platform’s capabilities.
 
-A custom user model was created by extending Django’s AbstractUser class.
-Additional fields were added to support social media functionality, including:
+USER AUTHENTICATION AND PROFILE MANAGEMENT (PHASE 1)
 
-• Bio – short description about the user
-• Profile picture – optional image field
-• Followers – a many-to-many relationship that allows users to follow one another
+This phase focuses on setting up user management and authentication.
 
-Token-based authentication was implemented to secure API requests.
-A token is generated automatically when a user registers or logs in.
+Key features implemented:
 
-API ENDPOINTS
+• Custom user model extending Django’s AbstractUser
+• Additional user fields such as bio, profile picture, and followers
+• Token-based authentication for secure API access
+• User registration and login functionality
+• Authenticated user profile retrieval
 
-The following endpoints were implemented in this phase:
+User authentication ensures that only verified users can access protected API endpoints.
+
+AUTHENTICATION ENDPOINTS
 
 User Registration
 Endpoint: /api/accounts/register/
@@ -54,39 +56,87 @@ Purpose: Authenticates a user and returns an authentication token.
 User Profile
 Endpoint: /api/accounts/profile/
 Method: GET
-Purpose: Retrieves the authenticated user’s profile information.
+Purpose: Retrieves profile details of the authenticated user.
 
-TESTING
+POSTS FUNCTIONALITY (PHASE 2)
 
-The Django development server was started to confirm that the project setup was successful.
+Posts allow users to share content on the platform.
 
-API endpoints were tested using tools such as Postman to verify:
-• Successful user registration
-• Successful login
-• Token generation
-• Authorized access to protected endpoints
+Each post contains:
+• Author
+• Title
+• Content
+• Date created
+• Date updated
 
-PROJECT STRUCTURE OVERVIEW
+Authenticated users can:
+• Create posts
+• View posts
+• Edit their own posts
+• Delete their own posts
 
-The project is structured into two main parts:
+COMMENTS FUNCTIONALITY (PHASE 2)
 
-• The main Django project (social_media_api) containing configuration files
-• The accounts app containing models, serializers, views, and URLs related to users
+Comments allow users to engage with posts created by other users.
 
-This structure allows for easy scalability as more features are added.
+Each comment contains:
+• Related post
+• Author
+• Content
+• Date created
+• Date updated
 
-FUTURE IMPROVEMENTS
+Authenticated users can:
+• Add comments to posts
+• View comments
+• Edit their own comments
+• Delete their own comments
 
-Planned future features include:
+POSTS AND COMMENTS ENDPOINTS
 
-• Creating posts
-• Following and unfollowing users
-• Likes and comments
-• User feeds
-• Pagination and filtering
-• Media uploads
+Posts
+Endpoint: /api/posts/
+Methods: GET, POST
+
+Single Post
+Endpoint: /api/posts/{id}/
+Methods: PUT, DELETE
+
+Comments
+Endpoint: /api/comments/
+Methods: GET, POST
+
+Single Comment
+Endpoint: /api/comments/{id}/
+Methods: PUT, DELETE
+
+AUTHENTICATION AND PERMISSIONS
+
+Token-based authentication is required for all protected endpoints.
+
+Permission rules include:
+• Only authenticated users can create posts and comments
+• Users can only update or delete content they own
+• All users can view posts and comments
+
+These rules ensure secure and fair usage of the platform.
+
+PAGINATION AND SEARCH
+
+Pagination is implemented to limit the number of posts and comments returned per request.
+
+Search functionality allows users to filter posts using keywords found in the post title or content.
+
+TESTING AND VALIDATION
+
+The API was tested using Postman to ensure:
+
+• Successful user registration and login
+• Token generation and authentication
+• Proper creation and management of posts and comments
+• Correct enforcement of permissions
+• Pagination and search functionality working as expected
 
 CONCLUSION
 
-This phase successfully establishes the foundation for a Social Media API.
-The project environment is fully configured, user authentication is functional, and the system is ready for future expansion into full social media features.
+This project successfully implements the core backend functionality required for a social media platform. The API supports secure user authentication, content creation through posts, and user interaction through comments. The system is designed to be scalable and ready for future enhancements.
